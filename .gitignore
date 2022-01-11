@@ -1,0 +1,8 @@
+apex/
+data/
+fairseq/
+loggin/
+model/
+mosesdecoder/
+subword-nmt/
+
