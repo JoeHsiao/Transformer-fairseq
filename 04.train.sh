@@ -8,7 +8,8 @@ fairseq-train $data_bin_dir \
     --arch transformer \
 	--source-lang $src --target-lang $tgt  \
     --optimizer adam  --lr 0.001 --adam-betas '(0.9, 0.98)' \
-    --lr-scheduler inverse_sqrt --max-tokens 2048  --dropout 0.3 \
+    --lr-scheduler inverse_sqrt \
+    --max-tokens 4096 --update-freq 4 --dropout 0.3 \
     --criterion label_smoothed_cross_entropy \
     --max-update 200000 \
     --keep-last-epochs 10 \

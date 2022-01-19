@@ -119,22 +119,19 @@ echo "Split data into training, validation, and test"
 python3 split_into_training.py --src=$tmp/clean.$src --target=$tmp/clean.$tgt --out-dir=$tmp
 
 ### BPE
-BPE_TRAIN=$tmp/bpe.train.$src-$tgt
+BPE_TRAIN=$tmp/bpe.train
 BPE_CODE=$prep/code
-rm -f $BPE_TRAIN
-
-cat $tmp/train.$src >> $BPE_TRAIN
-cat $tmp/train.$tgt >> $BPE_TRAIN
-
-echo "learn_bpe.py on ${BPE_TRAIN}..."
-python3 $BPEROOT/learn_bpe.py -s $BPE_TOKENS < $BPE_TRAIN > $BPE_CODE
+BPE_VOCAB=$tmp/bpe.vocab
 
 for l in $src $tgt; do
+    rm -f $BPE_TRAIN.$l
+    cat $tmp/train.$l >> $BPE_TRAIN.$l
+    
+    echo "learn_bpe.py on ${l}..."
+    python3 $BPEROOT/learn_joint_bpe_and_vocab.py --input $BPE_TRAIN.$l -s $BPE_TOKENS -o $BPE_CODE.$l --write-vocabulary $BPE_VOCAB.$l
+
     for d in train val test; do
         echo "apply_bpe.py to ${d}.${l}..."
-        python3 $BPEROOT/apply_bpe.py -c $BPE_CODE < $tmp/$d.$l > $prep/bpe.$d.$l
+        python3 $BPEROOT/apply_bpe.py -c $BPE_CODE.$l --vocabulary $BPE_VOCAB.$l < $tmp/$d.$l > $prep/bpe.$d.$l
     done
 done
-
-
-
