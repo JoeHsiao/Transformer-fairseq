@@ -22,10 +22,8 @@ To run on Google Colab, copy the repository onto Google Drive, and then launch `
 
 # Q&A
 ## Why validation loss won't drop during training (overfitting)?
-***
-Setting `--max-tokens` to 4096 should fix it. Translations of en-zh or zh-en cannot have a smaller value.
+Set `--max-tokens 4096` should fix it. Translations for en-zh or zh-en require at least such value.
 
 
 ## Why do I get the warning `CUDA OOM` during training?
-***
-The video card simply runs out of memory. On my GTX 1660 TI with 6GB of memory, `--max-tokens 2048 --update-freq 4` removes the majority of the warnings. `--update-freq x` delays backpropagation until `x` batches are reached. This serves as a workaround of needing a larger batch size but video card does not have enough memory.
+The video card simply runs out of memory. On my GTX 1660 TI with 6GB of memory, `--max-tokens 2048 --update-freq 4` removes the majority of the warnings. `--max-tokens 2048 --update-freq 2` might work better but I haven't tried. `--update-freq x` delays backpropagation until `x` batches are reached. This parameter serves as a workaround in situations where a larger batch size is needed but video card does not have enough memory.
